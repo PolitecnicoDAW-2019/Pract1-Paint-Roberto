@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Pract1-Paint-Roberto</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="root">
-      <canvas id="paint" style="border: 4px black solid"></canvas>
-      <div id="pallete">
-        <button id="line">Line</button>
-        <button id="square">square</button>
-        <br />
-        <button id="clearButton">Clear Canvas</button>
-      </div>
+        <canvas id="paint" style="border: 4px black solid;" width="720" height="480"></canvas>
+        <div id="pallete">
+            <button id="lineOption">Line</button>
+            <button id="squareOption">Square</button>
+            <button id="circleOption">Circle</button>
+            <button id="triangleOption">Triangle</button>
+            <button id="heartOption">Heart</button>
+            <input type="text" id="textInput">
+            <button id="textOption">Text</button>
+            <input type="file" id="imageOption">
+            <br />
+            <input type="color" id="colorPicker">
+            <input type="range" min="1" max="100" value="10" id="lineWidthChooser">
+            <button id="clearButton">Clear Canvas</button>
+        </div>
     </div>
-  </body>
-  <script src="/views/paint.view.js"></script>
-  <script src="app.js"></script>
+</body>
+<script src="/views/paint.view.js"></script>
+<script src="app.js"></script>
+
 </html>
