@@ -1,0 +1,23 @@
+{
+  "name": "pract1-paint-roberto",
+  "version": "1.0.0",
+  "description": "Just a simple and quick paint!",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PolitecnicoDAW/Pract1-Paint-Roberto.git"
+  },
+  "author": "robertojmm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PolitecnicoDAW/Pract1-Paint-Roberto/issues"
+  },
+  "homepage": "https://github.com/PolitecnicoDAW/Pract1-Paint-Roberto#readme",
+  "devDependencies": {
+    "electron": "^6.0.12"
+  }
+}
