@@ -1,0 +1,23 @@
+body {
+  margin: 2%;
+  background-color: #38444d;
+}
+
+#pallete {
+  float: right;
+  background-color: #4d3f38;
+  border: 4px solid black;
+}
+
+.pallete-element {
+  margin: 10%;
+}
+
+.pallete-element * {
+  width: 100%;
+}
+
+#paint {
+  border: 4px black solid;
+  float: left;
+}

@@ -1,42 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Pract1-Paint-Roberto</title>
-  </head>
+    <title>Pract1-Pain-Roberto</title>
+    <link rel="stylesheet" type="text/css" href="./assets/index.style.css">
+</head>
 
-  <body>
+<body>
     <div id="root">
-      <canvas
-        id="paint"
-        style="border: 4px black solid;"
-        width="720"
-        height="480"
-      ></canvas>
-      <div id="pallete">
-        <button id="lineOption">Line</button>
-        <button id="squareOption">Square</button>
-        <button id="circleOption">Circle</button>
-        <button id="triangleOption">Triangle</button>
-        <button id="heartOption">Heart</button>
-        <input type="text" id="textInput" />
-        <button id="textOption">Text</button>
-        <input type="file" id="imageOption" />
-        <br />
-        <input type="color" id="colorPicker" />
-        <input
-          type="range"
-          min="1"
-          max="100"
-          value="10"
-          id="lineWidthChooser"
-        />
-        <button id="clearButton">Clear Canvas</button>
-      </div>
-    </div>
-  </body>
-  <script src="./views/paint.view.js"></script>
-  <script src="app.js"></script>
+        <canvas id="paint"></canvas>
+        <div id="pallete">
+            <div class="pallete-element"><button id="lineOption">Line</button></div>
+            <div class="pallete-element"><button id="squareOption">Square</button></div>
+            <div class="pallete-element"><button id="circleOption">Circle</button></div>
+            <div class="pallete-element"><button id="triangleOption">Triangle</button></div>
+            <div class="pallete-element"><button id="heartOption">Heart</button></div>
+            <div class="pallete-element"><input type="text" id="textInput" /><button id="textOption">Text</button></div>
+            <div class="pallete-element"><input type="file" id="imageOption" /></div>
+            <div class="pallete-element"><input type="color" id="colorPicker" /><input type="range" min="1" max="100" value="10" id="lineWidthChooser" /></div>
+            <div class="pallete-element"><button id="clearButton">Clear Canvas</button></div>
+            <div class="pallete-element"><a id="exportButton" download="canvas.png"><button>Export</button></a></button>
+            </div>
+        </div>
+</body>
+<script src="./views/paint.view.js"></script>
+<script src="app.js"></script>
+
 </html>

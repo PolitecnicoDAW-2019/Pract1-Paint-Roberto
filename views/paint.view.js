@@ -1,5 +1,11 @@
 class PaintView {
   constructor() {
+    this.dom.canvas.height = window.innerHeight * 0.9;
+    this.dom.canvas.width = window.innerWidth * 0.75;
+
+    this.dom.pallete.style.height = `${window.innerHeight * 0.9}px`;
+    this.dom.pallete.style.width = `${window.innerWidth * 0.18}px`;
+
     this.bindLineOption();
     this.dom.lineOption.click();
     this.bindSquareOption();
@@ -12,14 +18,18 @@ class PaintView {
     this.controlColorPicker();
     this.controlLineWidth();
     this.bindClearButton();
+    this.bindExportButton();
 
     this.context.lineWidth = 10;
     this.context.lineJoin = 'round';
     this.context.lineCap = 'round';
+
+    this.clearCanvas();
   }
 
   dom = {
     canvas: document.getElementById('paint'),
+    pallete: document.getElementById('pallete'),
     lineOption: document.getElementById('lineOption'),
     squareOption: document.getElementById('squareOption'),
     circleOption: document.getElementById('circleOption'),
@@ -30,7 +40,8 @@ class PaintView {
     imageOption: document.getElementById('imageOption'),
     colorPicker: document.getElementById('colorPicker'),
     lineWidthChooser: document.getElementById('lineWidthChooser'),
-    clearButton: document.getElementById('clearButton')
+    clearButton: document.getElementById('clearButton'),
+    exportButton: document.getElementById('exportButton')
   };
 
   rect = this.dom.canvas.getBoundingClientRect();
@@ -40,11 +51,6 @@ class PaintView {
   mouseIsPressed;
   lastMousePositions = { x: 0, y: 0 };
   fileLoaded;
-
-  getMousePosition = event => {
-    //Clean this
-    return [event.clientX - this.rect.left, event.clientY - this.rect.top];
-  };
 
   drawLine = event => {
     if (this.mouseIsPressed) {
@@ -60,27 +66,15 @@ class PaintView {
     if (event.type === 'mousedown') {
       this.lastMousePositions = { x: event.offsetX, y: event.offsetY };
     } else {
-      const [x, y] = this.getMousePosition(event);
-      this.context.strokeRect(
-        x,
-        y,
-        this.lastMousePositions.x - x,
-        this.lastMousePositions.y - y
-      );
+      const [x, y] = [event.offsetX, event.offsetY];
+      this.context.strokeRect(x, y, this.lastMousePositions.x - x, this.lastMousePositions.y - y);
     }
   };
 
   drawCircle = event => {
     const radius = 20;
     this.context.beginPath();
-    this.context.arc(
-      event.offsetX,
-      event.offsetY,
-      radius,
-      0,
-      2 * Math.PI,
-      false
-    );
+    this.context.arc(event.offsetX, event.offsetY, radius, 0, 2 * Math.PI, false);
     this.context.fill();
     this.context.stroke();
   };
@@ -98,65 +92,19 @@ class PaintView {
   drawHeart = event => {
     this.context.beginPath();
     this.context.moveTo(event.offsetX - 75, event.offsetY + 40);
-    this.context.bezierCurveTo(
-      event.offsetX - 75,
-      event.offsetY + 37,
-      event.offsetX - 70,
-      event.offsetY + 25,
-      event.offsetX - 50,
-      event.offsetY + 25
-    );
-    this.context.bezierCurveTo(
-      event.offsetX - 20,
-      event.offsetY + 25,
-      event.offsetX - 20,
-      event.offsetY + 62.5,
-      event.offsetX - 20,
-      event.offsetY + 62.5
-    );
-    this.context.bezierCurveTo(
-      event.offsetX - 20,
-      event.offsetY + 80,
-      event.offsetX - 40,
-      event.offsetY + 102,
-      event.offsetX - 75,
-      event.offsetY + 120
-    );
-    this.context.bezierCurveTo(
-      event.offsetX - 110,
-      event.offsetY + 102,
-      event.offsetX - 130,
-      event.offsetY + 80,
-      event.offsetX - 130,
-      event.offsetY + 62.5
-    );
-    this.context.bezierCurveTo(
-      event.offsetX - 130,
-      event.offsetY + 62.5,
-      event.offsetX - 130,
-      event.offsetY + 25,
-      event.offsetX - 100,
-      event.offsetY + 25
-    );
-    this.context.bezierCurveTo(
-      event.offsetX - 85,
-      event.offsetY + 25,
-      event.offsetX - 75,
-      event.offsetY + 37,
-      event.offsetX - 75,
-      event.offsetY + 40
-    );
+    this.context.bezierCurveTo(event.offsetX - 75, event.offsetY + 37, event.offsetX - 70, event.offsetY + 25, event.offsetX - 50, event.offsetY + 25);
+    this.context.bezierCurveTo(event.offsetX - 20, event.offsetY + 25, event.offsetX - 20, event.offsetY + 62.5, event.offsetX - 20, event.offsetY + 62.5);
+    this.context.bezierCurveTo(event.offsetX - 20, event.offsetY + 80, event.offsetX - 40, event.offsetY + 102, event.offsetX - 75, event.offsetY + 120);
+    this.context.bezierCurveTo(event.offsetX - 110, event.offsetY + 102, event.offsetX - 130, event.offsetY + 80, event.offsetX - 130, event.offsetY + 62.5);
+    this.context.bezierCurveTo(event.offsetX - 130, event.offsetY + 62.5, event.offsetX - 130, event.offsetY + 25, event.offsetX - 100, event.offsetY + 25);
+    this.context.bezierCurveTo(event.offsetX - 85, event.offsetY + 25, event.offsetX - 75, event.offsetY + 37, event.offsetX - 75, event.offsetY + 40);
     this.context.fill();
     this.context.closePath();
   };
 
   drawText = event => {
     this.context.font = '30px Arial';
-    this.context.strokeText(
-      this.dom.textInput.value,
-      event.offsetX,
-      event.offsetY
-    );
+    this.context.strokeText(this.dom.textInput.value, event.offsetX, event.offsetY);
   };
 
   drawImage = event => {
@@ -181,18 +129,9 @@ class PaintView {
 
   unbindDrawLine = () => {
     this.dom.canvas.removeEventListener('mousemove', this.drawLine);
-    this.dom.canvas.removeEventListener(
-      'mouseup',
-      this.switchMouseIsPressedValue
-    );
-    this.dom.canvas.removeEventListener(
-      'mouseout',
-      this.switchMouseIsPressedValue
-    );
-    this.dom.canvas.removeEventListener(
-      'mousedown',
-      this.switchMouseIsPressedValue
-    );
+    this.dom.canvas.removeEventListener('mouseup', this.switchMouseIsPressedValue);
+    this.dom.canvas.removeEventListener('mouseout', this.switchMouseIsPressedValue);
+    this.dom.canvas.removeEventListener('mousedown', this.switchMouseIsPressedValue);
   };
 
   unbindDrawSquare = () => {
@@ -200,16 +139,11 @@ class PaintView {
     this.dom.canvas.removeEventListener('mouseup', this.drawSquare);
   };
 
-  unbindDrawCircle = () =>
-    this.dom.canvas.removeEventListener('click', this.drawCircle);
-  unbindDrawTriangle = () =>
-    this.dom.canvas.removeEventListener('click', this.drawTriangle);
-  unbindDrawHeart = () =>
-    this.dom.canvas.removeEventListener('click', this.drawHeart);
-  unbindDrawText = () =>
-    this.dom.canvas.removeEventListener('click', this.drawText);
-  unbindDrawImage = () =>
-    this.dom.canvas.removeEventListener('click', this.drawImage);
+  unbindDrawCircle = () => this.dom.canvas.removeEventListener('click', this.drawCircle);
+  unbindDrawTriangle = () => this.dom.canvas.removeEventListener('click', this.drawTriangle);
+  unbindDrawHeart = () => this.dom.canvas.removeEventListener('click', this.drawHeart);
+  unbindDrawText = () => this.dom.canvas.removeEventListener('click', this.drawText);
+  unbindDrawImage = () => this.dom.canvas.removeEventListener('click', this.drawImage);
 
   unBindListener = () => {
     const options = {
@@ -241,18 +175,9 @@ class PaintView {
       this.unBindListener();
       this.actualListener = 'drawLine';
       this.dom.canvas.addEventListener('mousemove', this.drawLine);
-      this.dom.canvas.addEventListener(
-        'mouseup',
-        this.switchMouseIsPressedValue
-      );
-      this.dom.canvas.addEventListener(
-        'mouseout',
-        this.switchMouseIsPressedValue
-      );
-      this.dom.canvas.addEventListener(
-        'mousedown',
-        this.switchMouseIsPressedValue
-      );
+      this.dom.canvas.addEventListener('mouseup', this.switchMouseIsPressedValue);
+      this.dom.canvas.addEventListener('mouseout', this.switchMouseIsPressedValue);
+      this.dom.canvas.addEventListener('mousedown', this.switchMouseIsPressedValue);
     });
   };
 
@@ -306,10 +231,8 @@ class PaintView {
     });
   };
 
-  controlColorPicker = () =>
-    this.dom.colorPicker.addEventListener('change', this.updateContext);
-  controlLineWidth = () =>
-    this.dom.lineWidthChooser.addEventListener('change', this.updateContext);
+  controlColorPicker = () => this.dom.colorPicker.addEventListener('change', this.updateContext);
+  controlLineWidth = () => this.dom.lineWidthChooser.addEventListener('change', this.updateContext);
 
   updateContext = () => {
     this.context.strokeStyle = this.dom.colorPicker.value;
@@ -317,9 +240,16 @@ class PaintView {
     this.context.lineWidth = this.dom.lineWidthChooser.value;
   };
 
-  clearCanvas = () =>
-    this.context.clearRect(0, 0, this.dom.canvas.width, this.dom.canvas.height);
+  clearCanvas = () => {
+    const previousColor = this.context.fillStyle;
+    this.context.fillStyle = 'white';
+    this.context.fillRect(0, 0, this.dom.canvas.width, this.dom.canvas.height);
+    this.context.fillStyle = previousColor;
+  };
 
-  bindClearButton = () =>
-    this.dom.clearButton.addEventListener('click', this.clearCanvas);
+  bindClearButton = () => this.dom.clearButton.addEventListener('click', this.clearCanvas);
+
+  exportCanvas = () => (this.dom.exportButton.href = this.dom.canvas.toDataURL('image/png').replace(/^data:image\/png/, 'data:application/octet-stream'));
+
+  bindExportButton = () => this.dom.exportButton.addEventListener('click', this.exportCanvas);
 }
