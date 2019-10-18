@@ -1,13 +1,21 @@
 class PaintView {
   constructor() {
-    this.dom.canvas.height = window.innerHeight * 0.9;
-    this.dom.canvas.width = window.innerWidth * 0.75;
+    this.DOM.canvas.height = window.innerHeight * 0.9;
+    this.DOM.canvas.width = window.innerWidth * 0.75;
 
-    this.dom.pallete.style.height = `${window.innerHeight * 0.9}px`;
-    this.dom.pallete.style.width = `${window.innerWidth * 0.18}px`;
+    this.DOM.pallete.style.height = `${window.innerHeight * 0.9}px`;
+    this.DOM.pallete.style.width = `${window.innerWidth * 0.18}px`;
+
+    this.rect = this.DOM.canvas.getBoundingClientRect();
+    this.context = this.DOM.canvas.getContext('2d');
+    this.actualListener = 'drawLine';
+    this.actualColor;
+    this.mouseIsPressed;
+    this.lastMousePositions = { x: 0, y: 0 };
+    this.fileLoaded;
 
     this.bindLineOption();
-    this.dom.lineOption.click();
+    this.DOM.lineOption.click();
     this.bindSquareOption();
     this.bindCircleOption();
     this.bindTriangleOption();
@@ -27,7 +35,7 @@ class PaintView {
     this.clearCanvas();
   }
 
-  dom = {
+  DOM = {
     canvas: document.getElementById('paint'),
     pallete: document.getElementById('pallete'),
     lineOption: document.getElementById('lineOption'),
@@ -43,14 +51,6 @@ class PaintView {
     clearButton: document.getElementById('clearButton'),
     exportButton: document.getElementById('exportButton')
   };
-
-  rect = this.dom.canvas.getBoundingClientRect();
-  context = this.dom.canvas.getContext('2d');
-  actualColor;
-  actualListener = 'drawLine';
-  mouseIsPressed;
-  lastMousePositions = { x: 0, y: 0 };
-  fileLoaded;
 
   drawLine = event => {
     if (this.mouseIsPressed) {
@@ -104,11 +104,11 @@ class PaintView {
 
   drawText = event => {
     this.context.font = '30px Arial';
-    this.context.strokeText(this.dom.textInput.value, event.offsetX, event.offsetY);
+    this.context.strokeText(this.DOM.textInput.value, event.offsetX, event.offsetY);
   };
 
   drawImage = event => {
-    const img = this.dom.imageOption.files[0];
+    const img = this.DOM.imageOption.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(img);
 
@@ -128,22 +128,22 @@ class PaintView {
   };
 
   unbindDrawLine = () => {
-    this.dom.canvas.removeEventListener('mousemove', this.drawLine);
-    this.dom.canvas.removeEventListener('mouseup', this.switchMouseIsPressedValue);
-    this.dom.canvas.removeEventListener('mouseout', this.switchMouseIsPressedValue);
-    this.dom.canvas.removeEventListener('mousedown', this.switchMouseIsPressedValue);
+    this.DOM.canvas.removeEventListener('mousemove', this.drawLine);
+    this.DOM.canvas.removeEventListener('mouseup', this.switchMouseIsPressedValue);
+    this.DOM.canvas.removeEventListener('mouseout', this.switchMouseIsPressedValue);
+    this.DOM.canvas.removeEventListener('mousedown', this.switchMouseIsPressedValue);
   };
 
   unbindDrawSquare = () => {
-    this.dom.canvas.removeEventListener('mousedown', this.drawSquare);
-    this.dom.canvas.removeEventListener('mouseup', this.drawSquare);
+    this.DOM.canvas.removeEventListener('mousedown', this.drawSquare);
+    this.DOM.canvas.removeEventListener('mouseup', this.drawSquare);
   };
 
-  unbindDrawCircle = () => this.dom.canvas.removeEventListener('click', this.drawCircle);
-  unbindDrawTriangle = () => this.dom.canvas.removeEventListener('click', this.drawTriangle);
-  unbindDrawHeart = () => this.dom.canvas.removeEventListener('click', this.drawHeart);
-  unbindDrawText = () => this.dom.canvas.removeEventListener('click', this.drawText);
-  unbindDrawImage = () => this.dom.canvas.removeEventListener('click', this.drawImage);
+  unbindDrawCircle = () => this.DOM.canvas.removeEventListener('click', this.drawCircle);
+  unbindDrawTriangle = () => this.DOM.canvas.removeEventListener('click', this.drawTriangle);
+  unbindDrawHeart = () => this.DOM.canvas.removeEventListener('click', this.drawHeart);
+  unbindDrawText = () => this.DOM.canvas.removeEventListener('click', this.drawText);
+  unbindDrawImage = () => this.DOM.canvas.removeEventListener('click', this.drawImage);
 
   unBindListener = () => {
     const options = {
@@ -171,85 +171,85 @@ class PaintView {
   };
 
   bindLineOption = () => {
-    this.dom.lineOption.addEventListener('click', () => {
+    this.DOM.lineOption.addEventListener('click', () => {
       this.unBindListener();
       this.actualListener = 'drawLine';
-      this.dom.canvas.addEventListener('mousemove', this.drawLine);
-      this.dom.canvas.addEventListener('mouseup', this.switchMouseIsPressedValue);
-      this.dom.canvas.addEventListener('mouseout', this.switchMouseIsPressedValue);
-      this.dom.canvas.addEventListener('mousedown', this.switchMouseIsPressedValue);
+      this.DOM.canvas.addEventListener('mousemove', this.drawLine);
+      this.DOM.canvas.addEventListener('mouseup', this.switchMouseIsPressedValue);
+      this.DOM.canvas.addEventListener('mouseout', this.switchMouseIsPressedValue);
+      this.DOM.canvas.addEventListener('mousedown', this.switchMouseIsPressedValue);
     });
   };
 
   bindSquareOption = () => {
-    this.dom.squareOption.addEventListener('click', () => {
+    this.DOM.squareOption.addEventListener('click', () => {
       this.unBindListener();
       this.actualListener = 'drawSquare';
-      this.dom.canvas.addEventListener('mousedown', this.drawSquare);
-      this.dom.canvas.addEventListener('mouseup', this.drawSquare);
+      this.DOM.canvas.addEventListener('mousedown', this.drawSquare);
+      this.DOM.canvas.addEventListener('mouseup', this.drawSquare);
     });
   };
 
   bindHeartOption = () => {
-    this.dom.heartOption.addEventListener('click', () => {
+    this.DOM.heartOption.addEventListener('click', () => {
       this.unBindListener();
       this.actualListener = 'drawHeart';
-      this.dom.canvas.addEventListener('click', this.drawHeart);
+      this.DOM.canvas.addEventListener('click', this.drawHeart);
     });
   };
 
   bindCircleOption = () => {
-    this.dom.circleOption.addEventListener('click', () => {
+    this.DOM.circleOption.addEventListener('click', () => {
       this.unBindListener();
       this.actualListener = 'drawCircle';
-      this.dom.canvas.addEventListener('click', this.drawCircle);
+      this.DOM.canvas.addEventListener('click', this.drawCircle);
     });
   };
 
   bindTriangleOption = () => {
-    this.dom.triangleOption.addEventListener('click', () => {
+    this.DOM.triangleOption.addEventListener('click', () => {
       this.unBindListener();
       this.actualListener = 'drawTriangle';
-      this.dom.canvas.addEventListener('click', this.drawTriangle);
+      this.DOM.canvas.addEventListener('click', this.drawTriangle);
     });
   };
 
   bindTextOption = () => {
-    this.dom.textOption.addEventListener('click', () => {
+    this.DOM.textOption.addEventListener('click', () => {
       this.unBindListener();
       this.actualListener = 'drawText';
-      this.dom.canvas.addEventListener('click', this.drawText);
+      this.DOM.canvas.addEventListener('click', this.drawText);
     });
   };
 
   bindImageOption = () => {
-    this.dom.imageOption.addEventListener('click', () => {
+    this.DOM.imageOption.addEventListener('click', () => {
       this.fileLoaded = false;
       this.unBindListener();
       this.actualListener = 'drawImage';
-      this.dom.canvas.addEventListener('click', this.drawImage);
+      this.DOM.canvas.addEventListener('click', this.drawImage);
     });
   };
 
-  controlColorPicker = () => this.dom.colorPicker.addEventListener('change', this.updateContext);
-  controlLineWidth = () => this.dom.lineWidthChooser.addEventListener('change', this.updateContext);
+  controlColorPicker = () => this.DOM.colorPicker.addEventListener('change', this.updateContext);
+  controlLineWidth = () => this.DOM.lineWidthChooser.addEventListener('change', this.updateContext);
 
   updateContext = () => {
-    this.context.strokeStyle = this.dom.colorPicker.value;
-    this.context.fillStyle = this.dom.colorPicker.value;
-    this.context.lineWidth = this.dom.lineWidthChooser.value;
+    this.context.strokeStyle = this.DOM.colorPicker.value;
+    this.context.fillStyle = this.DOM.colorPicker.value;
+    this.context.lineWidth = this.DOM.lineWidthChooser.value;
   };
 
   clearCanvas = () => {
     const previousColor = this.context.fillStyle;
     this.context.fillStyle = 'white';
-    this.context.fillRect(0, 0, this.dom.canvas.width, this.dom.canvas.height);
+    this.context.fillRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
     this.context.fillStyle = previousColor;
   };
 
-  bindClearButton = () => this.dom.clearButton.addEventListener('click', this.clearCanvas);
+  bindClearButton = () => this.DOM.clearButton.addEventListener('click', this.clearCanvas);
 
-  exportCanvas = () => (this.dom.exportButton.href = this.dom.canvas.toDataURL('image/png').replace(/^data:image\/png/, 'data:application/octet-stream'));
+  exportCanvas = () => (this.DOM.exportButton.href = this.DOM.canvas.toDataURL('image/png').replace(/^data:image\/png/, 'data:application/octet-stream'));
 
-  bindExportButton = () => this.dom.exportButton.addEventListener('click', this.exportCanvas);
+  bindExportButton = () => this.DOM.exportButton.addEventListener('click', this.exportCanvas);
 }
